@@ -29,6 +29,7 @@ public class CostSplitManager {
 			dataManager.setDataFilePath(dataDirectory);
 			dataManager.loadData(Constants.PERSON);
 			dataManager.loadData(Constants.EVENT);	
+			dataManager.loadData(Constants.SETTLEMENT);
 				
 		}
 		catch (IOException ex) 
@@ -53,14 +54,13 @@ public class CostSplitManager {
 		Person payingPerson = null;
 		if ( personData != null )
 			payingPerson = personData.get(receiver);
-			if( payingPerson != null ) {
-				System.out.println("Person to pay" + payingPerson.getPersonsNeedtoPay());
+			if( payingPerson != null ) {				
 				returnAmount = payingPerson.getPersonsNeedtoPay().get(payer); //if both persons are same then problem
 			}
-			
-			System.out.println( "Person " + payer + " owes "+ returnAmount +" to person " + receiver );
-		
-		
+			if ( returnAmount != null )
+				System.out.println( "Person " + payer + " owes "+ returnAmount +" to person " + receiver );
+			else
+				System.out.println( "Person " + payer + " owes no money to person " + receiver );
 	}
 	
 	public void findEventExpense(String eventId){
@@ -68,8 +68,29 @@ public class CostSplitManager {
 		HashMap<String,Event> eventData = dataManager.getEventData();
 		Event event = eventData.get(eventId);
 		BigDecimal returnAmount = event.getEventExpense();
-		System.out.println( "Event " + event.getEventName() + " costed "+ returnAmount );
+		System.out.println( "Event " + event.getEventName() + " expense: "+ returnAmount );
 	}
+	
+	public void getSettlementLeftForTheEvent(String eventId){
+		HashMap<String,Event> eventData = dataManager.getEventData();
+		Event event = eventData.get(eventId);
+		if ( event.isSettled() )
+			System.out.println( "Event " +  event.getEventName() + " got settled");
+		else{
+			BigDecimal eventExpsense = event.getEventExpense();
+			
+			BigDecimal settlementAmount = event.getSettlementAmount();			
+			System.out.println( "Event " + event.getEventName() + " settlement amount: "+ eventExpsense.subtract(settlementAmount) + " pending");
+		}
+	}
+	
+	public void determineCostPerPersonForAnEvent(String eventId){		
+		HashMap<String,Event> eventData = dataManager.getEventData();
+		Event event = eventData.get(eventId);
+		BigDecimal eventCostPerson = event.getSplits().getAmount();
+		System.out.println( "Event " + event.getEventName() + " costed "+ eventCostPerson + " per person");
+	}
+	
 	
 	
 	public static void main (String args[] )
@@ -81,6 +102,9 @@ public class CostSplitManager {
 		manage.bootStrap();
 		manage.determineAmountPayablePersonbyPersion(args[0],args[1]);
 		manage.findEventExpense(args[2]);
+		manage.getSettlementLeftForTheEvent(args[2]);
+		manage.determineCostPerPersonForAnEvent(args[2]);
+		
 	}	
 	
 

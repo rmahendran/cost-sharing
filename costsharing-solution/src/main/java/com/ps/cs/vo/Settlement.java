@@ -6,14 +6,14 @@ import java.math.BigDecimal;
 public class Settlement {
 	
 	
-	private int eventId;
+	private String eventId;
 	private BigDecimal amountSettled;	
-	private String personPaid;
-	private String personRecevied;
-	public int getEventId() {
+	private String payer;
+	private String receiver;
+	public String getEventId() {
 		return eventId;
 	}
-	public void setEventId(int eventId) {
+	public void setEventId(String eventId) {
 		this.eventId = eventId;
 	}
 	public BigDecimal getAmountSettled() {
@@ -22,18 +22,19 @@ public class Settlement {
 	public void setAmountSettled(BigDecimal amountSettled) {
 		this.amountSettled = amountSettled;
 	}
-	public String getPersonPaid() {
-		return personPaid;
+	public String getPayer() {
+		return payer;
 	}
-	public void setPersonPaid(String personPaid) {
-		this.personPaid = personPaid;
+	public void setPayer(String payer) {
+		this.payer = payer;
 	}
-	public String getPersonRecevied() {
-		return personRecevied;
+	public String getReceiver() {
+		return receiver;
 	}
-	public void setPersonRecevied(String personRecevied) {
-		this.personRecevied = personRecevied;
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
 	}
+
 	
 	
 	

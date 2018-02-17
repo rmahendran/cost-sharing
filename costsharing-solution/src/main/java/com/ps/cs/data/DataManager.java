@@ -10,6 +10,7 @@ import com.ps.cs.Constants;
 import com.ps.cs.entities.Event;
 import com.ps.cs.entities.Person;
 import com.ps.cs.vo.CostSplit;
+import com.ps.cs.vo.Settlement;
 
 public class DataManager {
 	
@@ -17,10 +18,7 @@ public class DataManager {
 	@SuppressWarnings("unused")
 	private HashMap<String,Person> personData;
 	@SuppressWarnings("unused")
-	private HashMap<String,Event> eventData;
-	
-	
-	
+	private HashMap<String,Event> eventData;	
 	
 	public HashMap<String, Person> getPersonData() {
 		return personData;
@@ -57,13 +55,14 @@ public class DataManager {
 				switch(dataType){			
 					
 					case 1:						
-						personData = loadPersonData();
-					//	System.out.println("personData :" + personData);
+						personData = loadPersonData();					
 						break;
 					case 2:						
 						eventData = loadEventData();
-				//		System.out.println("eventData :" + eventData);
-						break;					
+						break;
+					case 3:
+						loadSettlementData();
+						break;
 					default:
 						System.out.println("No data load");
 						
@@ -88,8 +87,7 @@ public class DataManager {
 			String header = input.readLine();
 			if ( header != null ) {	
 			persons = new HashMap<String,Person>();
-			while ((sCurrentLine = input.readLine()) != null) {
-			//	System.out.println(sCurrentLine);
+			while ((sCurrentLine = input.readLine()) != null) {			
 				String[] personData = sCurrentLine.split(Constants.SPLITBY);
 				if ( personData != null && personData.length == 2){
 					
@@ -187,7 +185,54 @@ public class DataManager {
 			}	
 			
 		}
-	}		
+	}	
+	
+	private void loadSettlementData() throws IOException {		
+		
+		String sCurrentLine = null;		
+		BufferedReader input = null;	
+		Settlement settlement = null;
+		Person reciever = null;		
+		Event event = null;
+		
+		try {
+			input = new BufferedReader(new FileReader(dataFilePath+"/"+ Constants.SETTLEMENTTYPE +".db"));
+			String header = input.readLine();
+			if ( header != null ) {				
+				while ((sCurrentLine = input.readLine()) != null) {			
+				String[] settlementData = sCurrentLine.split(Constants.SPLITBY);
+				if ( settlementData != null && settlementData.length == 4){		
+					
+						settlement = new Settlement();
+						settlement.setEventId(settlementData[0]);
+						settlement.setPayer(settlementData[1]);
+						settlement.setReceiver(settlementData[2]);
+						settlement.setAmountSettled(new BigDecimal(settlementData[3]));
+						reciever = personData.get((settlementData[2]));
+						reciever.acceptSettlement(settlement);	
+				//		event = eventData.get(settlement.getEventId());
+				//		event.setSettlementAmount(settlement.getAmountSettled());
+					
+				    }
+				}
+			}
+		}catch(IOException e)
+		{			
+			
+			throw e;
+		}
+		finally {
+			try {
+				if (input != null)
+					input.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+
+			}
+		}
+		
+		
+	}
 }
 	
 	

@@ -15,7 +15,21 @@ public class Event {
 	private BigDecimal eventExpense;
 	private Person spender;
 	private CostSplit splits;
+	private BigDecimal settlementAmount;
+	private boolean isSettled;
 	
+	public boolean isSettled() {
+		return isSettled;
+	}
+	public void setSettled(boolean isSettled) {
+		this.isSettled = isSettled;
+	}
+	public BigDecimal getSettlementAmount() {
+		return settlementAmount;
+	}
+	public void setSettlementAmount(BigDecimal settlementAmount) {
+		this.settlementAmount = settlementAmount;
+	}
 	public CostSplit getSplits() {
 		return splits;
 	}
@@ -53,10 +67,7 @@ public class Event {
 	public void setEventExpense(BigDecimal eventExpense) {
 		this.eventExpense = eventExpense;
 	}	
-	public BigDecimal getCostByPerson(int personId) {
-		return eventExpense;
-	}
-	
+
 	public void calculateSplit(HashMap<String,Person> personData)
 	{
 		int numberOfParticipants = participantsList.length;
