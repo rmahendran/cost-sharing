@@ -2,10 +2,15 @@ package com.ps.cs;
 
 import java.util.HashMap;
 import java.util.Properties;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 import com.ps.cs.data.DataManager;
 import com.ps.cs.entities.Event;
@@ -116,13 +121,44 @@ public class CostSplitManager {
 	
 	
 	
-	public static void main (String args[] )
+	public static void main (String args[] ) throws Exception
 	{
 		//load the person data, event data & transactional data
 		//Open Http Server with path & handler attached for each query
 		
 		CostSplitManager manage = new CostSplitManager();
 		manage.bootStrap();
+		ServerSocket serverSocket = null;
+		BufferedReader  is = null;
+	    PrintWriter os=null;
+	    Socket s=null;
+	    String line=null;
+		try{
+		serverSocket = new ServerSocket(9000);
+		boolean isStopped = false;
+		while(!isStopped){
+			
+			System.out.println("Server started and Listening in 9000...");
+		    s = serverSocket.accept();
+		    is= new BufferedReader(new InputStreamReader(s.getInputStream()));
+		    os=new PrintWriter(s.getOutputStream());
+		    line=is.readLine();
+		    os.println("Query recieved is: " + line);
+            os.flush();
+		    //do something with clientSocket
+		}
+		}catch (Exception ex)
+		{
+			ex.printStackTrace();			
+		}finally {
+			if  ( serverSocket != null && !serverSocket.isClosed() )
+				serverSocket.close();
+			
+		}
+		
+		/** These have to be made queryable */
+		
+		/*
 		manage.determineAmountPayablePersonbyPersion(args[0],args[1]);
 		manage.findEventExpense(args[2]);
 		manage.getSettlementLeftForTheEvent(args[2]);
@@ -132,6 +168,8 @@ public class CostSplitManager {
 		manage.createEvent("");
 		manage.determineCostPerPersonForAnEvent("7");
 		manage.getSettlementLeftForTheEvent("7");
+		*/
+		/** These have to be made queryable */
 		
 	}	
 	
