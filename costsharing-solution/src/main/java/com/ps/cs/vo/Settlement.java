@@ -1,7 +1,17 @@
 package com.ps.cs.vo;
 
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
+
+import com.ps.cs.Constants;
+import com.ps.cs.entities.Event;
+import com.ps.cs.entities.Person;
 
 public class Settlement {
 	
@@ -10,6 +20,7 @@ public class Settlement {
 	private BigDecimal amountSettled;	
 	private String payer;
 	private String receiver;
+	
 	public String getEventId() {
 		return eventId;
 	}
@@ -35,7 +46,56 @@ public class Settlement {
 		this.receiver = receiver;
 	}
 
+	/**On Demand Changes**/
+	// Assumption - Settlement file exists with header
+	public void addSettlement(String dataFilePath, Person receiverObj) throws IOException
+	{				
+		BufferedWriter output = null;	
+		StringBuffer settlement = new StringBuffer();
+				
+		
+		
+		try {
+			
+			output = new BufferedWriter(new FileWriter(dataFilePath+"/"+ Constants.SETTLEMENTTYPE +".db",true));
+			settlement.append("\n");
+			settlement.append(eventId);
+			settlement.append(Constants.SPLITBY);
+			settlement.append(payer);
+			settlement.append(Constants.SPLITBY);
+			settlement.append(receiver);
+			settlement.append(Constants.SPLITBY);
+			settlement.append(amountSettled);
+			
+			output.write(settlement.toString());
+			output.flush();		
+			
+			receiverObj.acceptSettlement(this);
+
+		}catch(IOException e)
+		{			
+			
+			throw e;
+		}
+		finally {
+			try {
+				if (output != null)
+					output.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+
+			}
+		}
+		
+		
 	
+		
+		
+	}
+	
+	
+	
+	/**On Demand Changes**/
 	
 	
 

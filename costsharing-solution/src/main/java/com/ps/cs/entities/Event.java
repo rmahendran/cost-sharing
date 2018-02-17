@@ -1,10 +1,14 @@
 package com.ps.cs.entities;
 
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.HashMap;
 
+import com.ps.cs.Constants;
 import com.ps.cs.vo.CostSplit;
 
 public class Event {
@@ -100,5 +104,74 @@ public class Event {
 		
 		
 	}
+	
+	
+	
+	/**On Demand Changes**/
+	// Assumption - Settlement file exists with header
+	public void addEvent(String dataFilePath, HashMap<String,Person> personData, String spenderValue) throws IOException
+	{				
+		BufferedWriter output = null;	
+		StringBuffer event = new StringBuffer();
+		StringBuffer participantValues = new StringBuffer("");
+
+		
+		
+		try {
+			
+			output = new BufferedWriter(new FileWriter(dataFilePath+"/"+ Constants.EVENTTYPE +".db",true));
+			event.append("\n");
+			event.append(eventId);
+			event.append(Constants.SPLITBY);
+			event.append(eventName);
+			event.append(Constants.SPLITBY);
+			
+			
+			for ( int index=0;index<participantsList.length;index++ )
+			{
+				participantValues.append(participantsList[index]);
+				if ( index < participantsList.length - 1)
+					participantValues.append(Constants.PARTICIPATNT_SPLITBY);
+			}			
+			event.append(participantValues.toString());
+			
+			event.append(Constants.SPLITBY);
+			event.append(eventExpense);			
+			event.append(Constants.SPLITBY);
+			event.append(spenderValue);
+					
+			
+			output.write(event.toString());
+			output.flush();		
+			this.setSpender( personData.get(spenderValue) );
+			this.calculateSplit(personData);
+
+		}catch(IOException e)
+		{			
+			
+			throw e;
+		}
+		finally {
+			try {
+				if (output != null)
+					output.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+
+			}
+		}
+		
+		
+	
+		
+		
+	}
+	
+	
+	
+	/**On Demand Changes**/
+	
+	
+	
 
 }

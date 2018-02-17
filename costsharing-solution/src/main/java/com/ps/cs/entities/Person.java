@@ -85,34 +85,39 @@ public class Person {
         	personsNeedtoPay.put(person.getPersonId(),amount);           
 	}
 	public void acceptSettlement(Settlement settlement) {
-		BigDecimal amountToBePaid = personsNeedtoPay.get(settlement.getPayer());
+		
+		BigDecimal amountToBePaid = null;
 		BigDecimal substractedAmount;
 		
-		
-		if ( amountToBePaid.compareTo(settlement.getAmountSettled()) == 0 ) 
-		{
-			 if ( personsSettled == null )
-				 personsSettled =  new  HashMap<String, BigDecimal>();			 
-			 personsSettled.put( settlement.getPayer(), settlement.getAmountSettled());//trail of settlements
-			 substractedAmount = amountToBePaid.subtract(settlement.getAmountSettled());
-			 if ( substractedAmount.compareTo( new BigDecimal(0) ) == 0 ) 
-				 	personsNeedtoPay.remove(settlement.getPayer());
-			 else
-				 	personsNeedtoPay.put(settlement.getPayer(), substractedAmount);//negative conditions not checked			 
-			 //get the Event from paid event and substract the payment - Gives settlement left for the event
-			 Event event = paidEvents.get(settlement.getEventId());			 
-			 BigDecimal eventSettlement = event.getSettlementAmount();	
-			 
-			 if ( eventSettlement == null )
-				 eventSettlement = settlement.getAmountSettled();
-			 else
-				 eventSettlement.add(settlement.getAmountSettled());		
-			 
-			 if ( personsNeedtoPay.isEmpty())
-				 event.setSettled(true);
-			 else
-				 event.setSettlementAmount(eventSettlement);
-		}		
+		if ( personsNeedtoPay != null ){
 			
+			amountToBePaid = personsNeedtoPay.get(settlement.getPayer());
+			if ( amountToBePaid.compareTo(settlement.getAmountSettled()) == 0 ) 
+		    {
+				
+			 if ( personsSettled == null )
+				personsSettled =  new  HashMap<String, BigDecimal>();	
+			 
+				personsSettled.put( settlement.getPayer(), settlement.getAmountSettled());//trail of settlements
+				substractedAmount = amountToBePaid.subtract(settlement.getAmountSettled());
+					if ( substractedAmount.compareTo( new BigDecimal(0) ) == 0 ) 
+						personsNeedtoPay.remove(settlement.getPayer());
+					else
+						personsNeedtoPay.put(settlement.getPayer(), substractedAmount);//negative conditions not checked			 
+					//get the Event from paid event and substract the payment - Gives settlement left for the event
+				 Event event = paidEvents.get(settlement.getEventId());			 
+				 BigDecimal eventSettlement = event.getSettlementAmount();	
+				 
+				 if ( eventSettlement == null )
+					 eventSettlement = settlement.getAmountSettled();
+				 else
+					 eventSettlement.add(settlement.getAmountSettled());		
+				 
+				 if ( personsNeedtoPay.isEmpty())
+					 event.setSettled(true);
+				 else
+					 event.setSettlementAmount(eventSettlement);
+		  }
+	   }	   
 	}
 }
