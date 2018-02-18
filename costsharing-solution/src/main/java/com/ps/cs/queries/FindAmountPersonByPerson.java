@@ -27,7 +27,7 @@ public class FindAmountPersonByPerson {
 		}
 		InetAddress host = InetAddress.getLocalHost();
 		inputMessage = new StringBuffer();
-        s = new Socket(host.getHostName(), 9000);        
+        s = new Socket(host.getHostName(), Constants.SERVERPORT);        
         br= new BufferedReader(new InputStreamReader(System.in));
         is=new BufferedReader(new InputStreamReader(s.getInputStream()));
         os= new PrintWriter(s.getOutputStream());
@@ -35,7 +35,10 @@ public class FindAmountPersonByPerson {
         inputMessage.append(Constants.SPLITBY);
         inputMessage.append(args[1]);
         inputMessage.append(Constants.SPLITBY);
-        inputMessage.append("P");//Query Type
+        inputMessage.append(Constants.PERSONBYPERSONQUERY);//Query Type
+        
+        
+        System.out.println("Query to server:" + inputMessage);
         
         //while(line.compareTo("QUIT")!=0){
         os.println(inputMessage);

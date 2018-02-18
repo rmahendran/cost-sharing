@@ -2,6 +2,8 @@ package com.ps.cs;
 
 import java.util.HashMap;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -53,7 +55,7 @@ public class CostSplitManager {
 		}
 	}
 	
-	public BigDecimal determineAmountPayablePersonbyPersion (String payer, String receiver){
+/*	public BigDecimal determineAmountPayablePersonbyPersion (String payer, String receiver){
 		
 		BigDecimal returnAmount = null;
 		HashMap<String,Person> personData = dataManager.getPersonData();
@@ -69,9 +71,32 @@ public class CostSplitManager {
 				System.out.println( "Person " + payer + " owes no money to person " + receiver );
 			
 			return returnAmount;
+	} */
+	
+	
+	public String determineAmountPayablePersonbyPersion (String payer, String receiver){
+		
+		BigDecimal returnAmount = null;
+		String returnResponse = null;
+		HashMap<String,Person> personData = dataManager.getPersonData();
+		
+		Person payingPerson = null;
+		if ( personData != null )
+			payingPerson = personData.get(receiver);
+			System.out.println("payingPerson.getPersonsNeedtoPay" + payingPerson.getPersonsNeedtoPay());
+			
+			if( payingPerson != null && payingPerson.getPersonsNeedtoPay() != null ) {				
+				returnAmount = payingPerson.getPersonsNeedtoPay().get(payer); //if both persons are same then problem
+			}
+			if ( returnAmount != null )
+				returnResponse = "Person " + payer + " owes "+ returnAmount +" to person " + receiver;
+			else
+				returnResponse =  "Person " + payer + " owes no money to person " + receiver;
+			
+			return returnResponse;
 	}
 	
-	public BigDecimal findEventExpense(String eventId){
+	/*public BigDecimal findEventExpense(String eventId){
 	
 		HashMap<String,Event> eventData = dataManager.getEventData();
 		Event event = eventData.get(eventId);
@@ -82,9 +107,25 @@ public class CostSplitManager {
 		}else
 			System.out.println( "Incorrect Event :" + eventId );
 		return returnAmount;
+	}*/
+	
+	public String findEventExpense(String eventId){
+		String returnResponse = null;
+		HashMap<String,Event> eventData = dataManager.getEventData();
+		Event event = eventData.get(eventId);
+		BigDecimal returnAmount = null;
+		if ( event != null) {
+			returnAmount = event.getEventExpense();
+			returnResponse = "Event " + event.getEventName() + " expense: "+ returnAmount ;
+		}else
+			returnResponse =  "Incorrect Event :" + eventId;
+		return returnResponse;
 	}
 	
-	public BigDecimal getSettlementLeftForTheEvent(String eventId){
+	
+	
+	
+	/*public BigDecimal getSettlementLeftForTheEvent(String eventId){
 		HashMap<String,Event> eventData = dataManager.getEventData();
 		Event event = eventData.get(eventId);
 		BigDecimal eventExpsense =  null;
@@ -105,9 +146,34 @@ public class CostSplitManager {
 		}else
 			System.out.println( "Incorrect Event :" + eventId );
 		return settlementAmount;
+	}*/
+	
+	
+	public String getSettlementLeftForTheEvent(String eventId){
+		HashMap<String,Event> eventData = dataManager.getEventData();
+		Event event = eventData.get(eventId);
+		BigDecimal eventExpsense =  null;
+		BigDecimal settlementAmount = null;
+		String response = null;
+		if ( event != null) {
+			if ( event.isSettled() )
+				response = "Event " +  event.getEventName() + " got settled";
+			else{
+				eventExpsense = event.getEventExpense();				
+				settlementAmount = event.getSettlementAmount();		
+				if ( settlementAmount == null ) {
+					settlementAmount = eventExpsense;
+					response = "Event " + event.getEventName() + " settlement amount: "+ settlementAmount + " pending";
+				}
+				else
+					response = "Event " + event.getEventName() + " settlement amount: "+ eventExpsense.subtract(settlementAmount) + " pending";
+			}
+		}else
+			response = "Incorrect Event :" + eventId;
+		return response;
 	}
 	
-	public BigDecimal determineCostPerPersonForAnEvent(String eventId){
+	/*public BigDecimal determineCostPerPersonForAnEvent(String eventId){
 		BigDecimal eventCostPerson = null;
 		HashMap<String,Event> eventData = dataManager.getEventData();
 		Event event = eventData.get(eventId);
@@ -117,6 +183,19 @@ public class CostSplitManager {
 		}else
 			System.out.println( "Incorrect Event :" + eventId );
 		return eventCostPerson;
+	}*/
+	
+	public String determineCostPerPersonForAnEvent(String eventId){
+		BigDecimal eventCostPerson = null;
+		HashMap<String,Event> eventData = dataManager.getEventData();
+		Event event = eventData.get(eventId);
+		String response = null;
+		if ( event != null) {		
+			eventCostPerson = event.getSplits().getAmount();
+			response = "Event " + event.getEventName() + " costed "+ eventCostPerson + " per person";
+		}else
+			response =  "Incorrect Event :" + eventId;
+		return response;
 	}
 	
 	
@@ -126,35 +205,11 @@ public class CostSplitManager {
 		//load the person data, event data & transactional data
 		//Open Http Server with path & handler attached for each query
 		
-		CostSplitManager manage = new CostSplitManager();
-		manage.bootStrap();
-		ServerSocket serverSocket = null;
-		BufferedReader  is = null;
-	    PrintWriter os=null;
-	    Socket s=null;
-	    String line=null;
-		try{
-		serverSocket = new ServerSocket(9000);
-		boolean isStopped = false;
-		while(!isStopped){
-			
-			System.out.println("Server started and Listening in 9000...");
-		    s = serverSocket.accept();
-		    is= new BufferedReader(new InputStreamReader(s.getInputStream()));
-		    os=new PrintWriter(s.getOutputStream());
-		    line=is.readLine();
-		    os.println("Query recieved is: " + line);
-            os.flush();
-		    //do something with clientSocket
-		}
-		}catch (Exception ex)
-		{
-			ex.printStackTrace();			
-		}finally {
-			if  ( serverSocket != null && !serverSocket.isClosed() )
-				serverSocket.close();
-			
-		}
+		CostSplitManager appManager = new CostSplitManager();
+		appManager.bootStrap();
+		appManager.startApplicationServer(Constants.SERVERPORT,appManager);
+		
+		
 		
 		/** These have to be made queryable */
 		
@@ -173,40 +228,84 @@ public class CostSplitManager {
 		
 	}	
 	
-	private void createSettlement(String settlementValue) 
+	public String createSettlement(String eventId, String payerId, String receiverId, String settlementAmount) 
 	{
 		
 		Settlement settlement = new Settlement();
-		settlement.setEventId("3");
-		settlement.setPayer("3");
-		settlement.setReceiver("4");
-		settlement.setAmountSettled( new BigDecimal("33.33"));		
+		settlement.setEventId(eventId);
+		settlement.setPayer(payerId);
+		settlement.setReceiver(receiverId);
+		settlement.setAmountSettled( new BigDecimal(settlementAmount));		
 		HashMap<String,Person> personData = dataManager.getPersonData();
+		String response = null;
 		try{
-			settlement.addSettlement(dataManager.getDataFilePath(),personData.get("4"));
+			settlement.addSettlement(dataManager.getDataFilePath(),personData.get(receiverId));
+			response = "Settlement created and processed succefully";
 			
 		}catch(IOException ex)
-		{ex.printStackTrace();}
+		{
+			ex.printStackTrace();
+			response = "Settlement failed";
+		}
+		return response;
 	}
 	
-	private void createEvent(String eventValue){
+	public String createEvent(String eventId, String eventName, String eventExpense,String eventParticipants,String spender){
 		Event event = new Event();
-		event.setEventId("7");
-		event.setEventName("Event7");
-		event.setEventExpense(new BigDecimal(250));
-		String eventParticipants [] = {"5","6"};		
-		event.setParticipantsList(eventParticipants);
+		event.setEventId(eventId);
+		event.setEventName(eventName);
+		event.setEventExpense(new BigDecimal(eventExpense));				
+		event.setParticipantsList(eventParticipants.split(Constants.PARTICIPATNT_SPLITBY));
 		
 		HashMap<String,Person> personData = dataManager.getPersonData();
 		HashMap<String,Event> eventData = dataManager.getEventData();
+		String response = null;
 		
 		try{
-			event.addEvent(dataManager.getDataFilePath(), personData,  "6");
+			event.addEvent(dataManager.getDataFilePath(), personData,  spender);
 			eventData.put(event.getEventId(), event);
+			response = "Event created "+ eventId+"  and processed successfully";
 		}catch(IOException ex)
-		{ex.printStackTrace();}	
-		
+		{
+			ex.printStackTrace();
+			response = "Event creation failed"; 
+					
+		}	
+		return response;
 	}
 	
+	
+	private void startApplicationServer(int port,CostSplitManager appManager) throws IOException
+	{
+		ServerSocket serverSocket = null;
+		
+	    Socket s=null;	    
+	    ExecutorService threadPool = null;
+		try{
+		serverSocket = new ServerSocket(port);
+		threadPool =   Executors.newFixedThreadPool(10);
+		boolean isStopped = false;
+		while(!isStopped){
+			
+			
+		    s = serverSocket.accept();
+		    threadPool.execute(new QueryRunnable(s,appManager));
+		    
+		    /*is= new BufferedReader(new InputStreamReader(s.getInputStream()));
+		    os=new PrintWriter(s.getOutputStream());
+		    line=is.readLine();
+		    os.println("Query recieved is: " + line);
+            os.flush();*/
+		    
+		}
+		}catch (Exception ex)
+		{
+			ex.printStackTrace();			
+		}finally {
+			if  ( serverSocket != null && !serverSocket.isClosed() )
+				serverSocket.close();
+			
+		}
+	}
 
 }

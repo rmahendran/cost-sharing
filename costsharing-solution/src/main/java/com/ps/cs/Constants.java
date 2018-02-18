@@ -13,6 +13,15 @@ public class Constants {
 	public static final String EVENTTYPE = "event";
 	public static final String TRANSACTIONTYPE = "transaction";
 	public static final String SETTLEMENTTYPE = "settlement";
+	
+	
+	public static final int SERVERPORT = 9000;
+	public static final String PERSONBYPERSONQUERY = "1";
+	public static final String EVENTEXPENSEQUERY = "2";
+	public static final String SETTLEMENTLEFTQUERY = "3";
+	public static final String COSTPERPERSONQUERY ="4";
+	public static final String SETTLEMENTQUERY ="5";
+	public static final String CREATEEVENTQUERY ="6";
 }
 
 
