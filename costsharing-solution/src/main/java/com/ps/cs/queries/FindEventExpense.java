@@ -24,10 +24,11 @@ public class FindEventExpense {
 				if ( args != null && args.length != 1 ) {
 					System.out.println("Query Invalid.Please send valid event id ");
 					return;
-				}
-				InetAddress host = InetAddress.getLocalHost();
+				}						
 				inputMessage = new StringBuffer();
-		        s = new Socket(host.getHostName(), Constants.SERVERPORT);        
+		 //       s = new Socket(host.getHostName(), Constants.SERVERPORT);
+				
+				s = new Socket("localhost", Constants.SERVERPORT);
 		        br= new BufferedReader(new InputStreamReader(System.in));
 		        is=new BufferedReader(new InputStreamReader(s.getInputStream()));
 		        os= new PrintWriter(s.getOutputStream());

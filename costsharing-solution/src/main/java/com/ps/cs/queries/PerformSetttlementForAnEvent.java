@@ -30,9 +30,9 @@ public class PerformSetttlementForAnEvent {
 					System.out.println("Query Invalid.Please send valid event id, Payer Id, Receiver Id and Settle Amount ");
 					return;
 				}
-				InetAddress host = InetAddress.getLocalHost();
+			//	InetAddress host = InetAddress.getLocalHost();
 				inputMessage = new StringBuffer();
-		        s = new Socket(host.getHostName(), Constants.SERVERPORT);        
+		        s = new Socket("localhost", Constants.SERVERPORT);        
 		        br= new BufferedReader(new InputStreamReader(System.in));
 		        is=new BufferedReader(new InputStreamReader(s.getInputStream()));
 		        os= new PrintWriter(s.getOutputStream());

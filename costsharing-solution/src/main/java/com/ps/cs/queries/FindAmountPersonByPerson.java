@@ -25,9 +25,9 @@ public class FindAmountPersonByPerson {
 					+ "Second arguement is the id of person who is required to get paid ");
 			return;
 		}
-		InetAddress host = InetAddress.getLocalHost();
+		
 		inputMessage = new StringBuffer();
-        s = new Socket(host.getHostName(), Constants.SERVERPORT);        
+        s = new Socket("localhost", Constants.SERVERPORT);        
         br= new BufferedReader(new InputStreamReader(System.in));
         is=new BufferedReader(new InputStreamReader(s.getInputStream()));
         os= new PrintWriter(s.getOutputStream());
