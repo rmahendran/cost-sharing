@@ -1,17 +1,16 @@
 package com.ps.cs.queries;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
-import java.net.InetAddress;
 import java.net.Socket;
-import java.util.HashMap;
 
 import com.ps.cs.Constants;
-import com.ps.cs.entities.Person;
-import com.ps.cs.vo.Settlement;
+
+
+/*
+ * Performs settlement between two persons associated with an valid event id
+ */
 
 public class PerformSetttlementForAnEvent {
 	

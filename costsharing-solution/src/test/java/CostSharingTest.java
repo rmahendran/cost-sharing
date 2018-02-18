@@ -1,6 +1,4 @@
 
-import java.math.BigDecimal;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,32 +16,30 @@ public class CostSharingTest {
 	 
 	 @Test
 	 public void determineAmountPayablePersonbyPersionTest(){	    
-		// 	BigDecimal actualValue = splitManager.determineAmountPayablePersonbyPersion("1","2");
-		 	BigDecimal expectedValue = new BigDecimal(50.00);
-		// 	Assert.assertTrue(actualValue.compareTo(expectedValue) == 0);
+		 	String actualValue = splitManager.determineAmountPayablePersonbyPersion("1","2");	
+		 	System.out.println("actualValue:" + actualValue);
+		 	Assert.assertTrue(actualValue.equalsIgnoreCase( "Person 1 owes no money to person 2"));	 	
 	 }
 	 
 	 @Test
 	 public void findEventExpense(){	    
-		// 	BigDecimal actualValue = splitManager.findEventExpense("2");
-		 	BigDecimal expectedValue = new BigDecimal(100.00);
-		// 	Assert.assertTrue(actualValue.compareTo(expectedValue) == 0);
+		    String actualValue = splitManager.findEventExpense("2");
+		    System.out.println("actualValue:" + actualValue);
+		 	Assert.assertTrue(actualValue.equalsIgnoreCase("Event Event2 expense: 100.00"));
 	 }
 	 
 	 @Test
 	 public void getSettlementLeftForTheEvent(){	    
-		// 	BigDecimal actualValue = splitManager.getSettlementLeftForTheEvent("1");
-		 	BigDecimal expectedValue = new BigDecimal(100.00);
-		// 	Assert.assertTrue(actualValue.compareTo(expectedValue) == 0);
+		 	String actualValue = splitManager.getSettlementLeftForTheEvent("1");
+		 	System.out.println("actualValue:" + actualValue);
+		 	Assert.assertTrue(actualValue.equalsIgnoreCase("Event Event1 got settled"));		 	
 	 }
 	 
 	 @Test
 	 public void determineCostPerPersonForAnEvent(){	    
-		// 	BigDecimal actualValue = splitManager.determineCostPerPersonForAnEvent("1");
-		 	BigDecimal expectedValue = new BigDecimal(50.00);
-		// 	Assert.assertTrue(actualValue.compareTo(expectedValue) == 0);
-	 }
-
-	  
-
+		 	String actualValue = splitManager.determineCostPerPersonForAnEvent("1");
+		 	System.out.println("actualValue:" + actualValue);
+		 	Assert.assertTrue(actualValue.equalsIgnoreCase("Event Event1 costed 50.00 per person"));
+	 }	  
+	 
 }

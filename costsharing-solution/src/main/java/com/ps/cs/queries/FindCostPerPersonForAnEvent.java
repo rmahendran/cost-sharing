@@ -56,7 +56,7 @@ public class FindCostPerPersonForAnEvent {
 			 		br.close();
 			 	if( s != null)
 			 		s.close();
-		        System.out.println("Connection Closed");
+		       
 		}
         
 	}

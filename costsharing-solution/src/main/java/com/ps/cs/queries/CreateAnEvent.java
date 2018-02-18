@@ -12,7 +12,7 @@ import java.util.HashMap;
 import com.ps.cs.Constants;
 import com.ps.cs.entities.Event;
 import com.ps.cs.entities.Person;
-import com.ps.cs.vo.Settlement;
+import com.ps.cs.entities.Settlement;
 
 public class CreateAnEvent {
 		

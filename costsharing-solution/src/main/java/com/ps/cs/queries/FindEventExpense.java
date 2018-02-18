@@ -3,10 +3,13 @@ package com.ps.cs.queries;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import com.ps.cs.Constants;
+
+/*
+ *  Generates query, communicates with server to determine the expense incurred for a given event id
+ */
 
 public class FindEventExpense {
 	
@@ -25,18 +28,14 @@ public class FindEventExpense {
 					System.out.println("Query Invalid.Please send valid event id ");
 					return;
 				}						
-				inputMessage = new StringBuffer();
-		 //       s = new Socket(host.getHostName(), Constants.SERVERPORT);
-				
+				inputMessage = new StringBuffer();			
 				s = new Socket("localhost", Constants.SERVERPORT);
 		        br= new BufferedReader(new InputStreamReader(System.in));
 		        is=new BufferedReader(new InputStreamReader(s.getInputStream()));
 		        os= new PrintWriter(s.getOutputStream());
 		        inputMessage.append(args[0]);        
 		        inputMessage.append(Constants.SPLITBY);
-		        inputMessage.append(Constants.EVENTEXPENSEQUERY);//Query Type
-		       
-		      
+		        inputMessage.append(Constants.EVENTEXPENSEQUERY);//Query Type    
 		        os.println(inputMessage);
 		        os.flush();
 		        response=is.readLine();

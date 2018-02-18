@@ -90,25 +90,19 @@ public class Event {
 			{
 				
 				participantsWithoutSpender[ offset ] = participantsList[ index ];
-				Person p = (Person)personData.get(participantsWithoutSpender[ offset ]);
-			//	System.out.println("Participant - spender: " + spender.getPersonId());
-			//	System.out.println("Participant - Non spender: " + p.getPersonId());
+				Person p = (Person)personData.get(participantsWithoutSpender[ offset ]);	
 				spender.isolatePersonsNeedToPayAlongWithAmount(p,amountSplit);
 				offset++;
 			}
 		}
-		splits.setParticipantsWithoutSpender(participantsWithoutSpender);
-	//	System.out.println("Amount Split:" + amountSplit);
-	//	System.out.println("Participant paid:" + spender);
-	//	System.out.println("Participants not paid size:" + participantsWithoutSpender.length);
-		
+		splits.setParticipantsWithoutSpender(participantsWithoutSpender);	
 		
 	}
 	
 	
 	
 	/**On Demand Changes**/
-	// Assumption - Settlement file exists with header
+	// Assumption - Event file exists with header
 	public void addEvent(String dataFilePath, HashMap<String,Person> personData, String spenderValue) throws IOException
 	{				
 		BufferedWriter output = null;	
@@ -145,6 +139,7 @@ public class Event {
 			output.flush();		
 			this.setSpender( personData.get(spenderValue) );
 			this.calculateSplit(personData);
+			associateEventWithPersonBasedonPayment(spenderValue,personData);
 
 		}catch(IOException e)
 		{			
@@ -167,7 +162,21 @@ public class Event {
 		
 	}
 	
-	
+	private void associateEventWithPersonBasedonPayment(String spender, HashMap<String,Person> personData) {
+		Person p = personData.get(spender);
+		if (p != null) {
+			p.addToPaidEvents(this);
+		} else {
+			CostSplit splitByEvent = this.getSplits();
+			String[] participantsWithoutSender = splitByEvent
+					.getParticipantsWithoutSpender();
+			for (int index = 0; index < participantsWithoutSender.length; index++) {
+				p = personData.get(participantsWithoutSender[index]);
+				p.addToUnPaidEvents(this);
+			}
+
+		}
+	}
 	
 	/**On Demand Changes**/
 	

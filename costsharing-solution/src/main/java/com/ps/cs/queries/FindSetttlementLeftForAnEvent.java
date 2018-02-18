@@ -3,7 +3,6 @@ package com.ps.cs.queries;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 
 import com.ps.cs.Constants;
@@ -33,12 +32,11 @@ public class FindSetttlementLeftForAnEvent {
 		        os= new PrintWriter(s.getOutputStream());
 		        inputMessage.append(args[0]);        
 		        inputMessage.append(Constants.SPLITBY);
-		        inputMessage.append(Constants.SETTLEMENTLEFTQUERY);//Query Type
-		       
-		      
+		        inputMessage.append(Constants.SETTLEMENTLEFTQUERY);//Query Type	      
 		        os.println(inputMessage);
 		        os.flush();
 		        response=is.readLine();
+		        System.out.println("Query Response : "+response); 
 		               
 		}
 		catch (Exception ex)
@@ -56,7 +54,7 @@ public class FindSetttlementLeftForAnEvent {
 			 		br.close();
 			 	if( s != null)
 			 		s.close();
-		        System.out.println("Connection Closed");
+		       
 		}
         
 	}

@@ -1,12 +1,12 @@
 package com.ps.cs.entities;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.ps.cs.vo.Settlement;
+/*
+ * Person domain object. Includes method that act on the state of the object
+ */
 
 public class Person {
 	

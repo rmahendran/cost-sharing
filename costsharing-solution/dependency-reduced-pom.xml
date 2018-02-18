@@ -19,7 +19,7 @@
             <configuration>
               <transformers>
                 <transformer>
-                  <mainClass>com.ps.cs.CostSplitManager</mainClass>
+                  <mainClass>com.ps.cs.CostSharingServer</mainClass>
                 </transformer>
               </transformers>
             </configuration>

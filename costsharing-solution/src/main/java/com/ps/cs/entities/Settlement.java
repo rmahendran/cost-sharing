@@ -1,17 +1,12 @@
-package com.ps.cs.vo;
+package com.ps.cs.entities;
 
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 
 import com.ps.cs.Constants;
-import com.ps.cs.entities.Event;
-import com.ps.cs.entities.Person;
 
 public class Settlement {
 	

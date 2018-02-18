@@ -30,7 +30,7 @@ public class QueryRunnable implements Runnable {
 	    os=new PrintWriter(clientSocket.getOutputStream());
 	    line=is.readLine();
 	    System.out.println("Query received by the server :" + line);
-	    response = performQuery(line);
+	    response = performQuery(line);	   
 	    os.println(response);
         os.flush();
     	}catch (IOException ex)
